@@ -1,7 +1,8 @@
 "use client"
 
 import React, {useState, useEffect} from "react";
-import Link from 'next/link'
+import Link from 'next/link';
+import EditIssueModal from "../components/editIssueModal";
 
 interface Issue {
   _id: string;
@@ -13,6 +14,7 @@ interface Issue {
 }
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false)
   const [issues, setIssues] = useState<Issue[]>([])
 
   useEffect(() => {
@@ -32,6 +34,19 @@ export default function Home() {
 
     fetchIssues()
   }, [])
+
+  const handleDelete = async (issueId: string) => {
+    console.log(`deleting issue ${issueId}`)
+  }
+
+  const handleEdit = async (issueId: string) => {
+    console.log(`editing issue ${issueId}`)
+    setIsOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsOpen(false)
+  }
 
   return (
   <main className="flex flex-col items-center">
@@ -58,13 +73,19 @@ export default function Home() {
               <td className="py-2 px-4">{issue.issue}</td>
               <td className="py-2 px-4">{issue.creationDate}</td>
               <td className="py-2 px-4">{issue.resolved}</td>
+              <td onClick={() => handleEdit(issue._id)}>edit</td>
+              <td onClick={() => handleDelete(issue._id)}>delete</td>
               </tr>
               )
             })
           }
         </tbody>
       </table>
-      
+      {isOpen && (
+          <EditIssueModal
+          
+          />
+        )}
     </div>
   </main>
   )
