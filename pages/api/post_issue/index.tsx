@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
 
+
 export default async function PostIssue(req: NextApiRequest, res: NextApiResponse) {
 
 
@@ -12,7 +13,10 @@ export default async function PostIssue(req: NextApiRequest, res: NextApiRespons
 
             const {name, location, issue} = req.body
 
-            const creationDate = new Date();
+            const creationDate = new Date().toLocaleDateString('en-US', {
+                dateStyle: 'medium',
+                hour12: true
+            });
 
             const result = await db.collection("issues")
             .insertOne({

@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from "react";
 import Link from 'next/link';
 import EditIssueModal from "../components/editIssueModal";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 interface Issue {
   _id: string;
@@ -16,36 +17,73 @@ interface Issue {
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
   const [issues, setIssues] = useState<Issue[]>([])
+  const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null)
+
+  async function fetchIssues() {
+    try {
+      const response = await fetch('/api/get_issues')
+      if (response.ok) {
+        const data = await response.json();
+        setIssues(data)
+      } else {
+        console.error("Failed to fetch issues")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
-    async function fetchIssues() {
-      try {
-        const response = await fetch('/api/get_issues')
-        if (response.ok) {
-          const data = await response.json();
-          setIssues(data)
-        } else {
-          console.error("Failed to fetch issues")
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
     fetchIssues()
   }, [])
 
   const handleDelete = async (issueId: string) => {
     console.log(`deleting issue ${issueId}`)
+    const confirmed = confirm("Delete this issue?")
+    if (confirmed)
+    try {
+      const response = await fetch(`/api/delete_issue?id=${issueId}`, {
+        method: "DELETE",
+    })
+    if (response.ok) {
+      console.log(`issue ${issueId} deleted`)
+    }
+    } catch (error) {
+      console.log(error)
+    }
+    fetchIssues()
   }
 
   const handleEdit = async (issueId: string) => {
     console.log(`editing issue ${issueId}`)
+    setSelectedIssueId(issueId)
     setIsOpen(true)
   }
 
-  const handleCloseModal = () => {
+  function handleCloseModal() {
+    setSelectedIssueId(null)
     setIsOpen(false)
+    fetchIssues()
+  }
+
+  async function handleToggleResolved(issueId: string) {
+      const issueToToggle: Issue = issues.find((issue) => issue._id === issueId)
+      try {
+          const response = await fetch(`/api/edit_issue?id=${issueId}`, {
+              method: "PATCH",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...issueToToggle,
+                resolved: !issueToToggle.resolved,
+              }) as string,
+          })
+          if (response.ok)
+          fetchIssues()
+      } catch (error) {
+          console.log(error)
+      }
   }
 
   return (
@@ -72,7 +110,7 @@ export default function Home() {
               <td className="py-2 px-4">{issue.location}</td>
               <td className="py-2 px-4">{issue.issue}</td>
               <td className="py-2 px-4">{issue.creationDate}</td>
-              <td className="py-2 px-4">{issue.resolved}</td>
+              <td className="py-2 px-4" onClick={() => handleToggleResolved(issue._id)}>{issue.resolved ? <p>true</p> : <p>false</p>}</td>
               <td onClick={() => handleEdit(issue._id)}>edit</td>
               <td onClick={() => handleDelete(issue._id)}>delete</td>
               </tr>
@@ -83,7 +121,10 @@ export default function Home() {
       </table>
       {isOpen && (
           <EditIssueModal
-          
+          isOpen={isOpen}
+          handleClose={handleCloseModal}
+          issueId={selectedIssueId}
+          onEditSuccess={fetchIssues}
           />
         )}
     </div>
