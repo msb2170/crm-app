@@ -71,7 +71,12 @@ export default function Home() {
   }
 
   async function handleToggleResolved(issueId: string) {
-      const issueToToggle: Issue = issues.find((issue) => issue._id === issueId)
+      const issueToToggle: Issue | undefined = issues.find((issue) => issue._id === issueId)
+
+      if (!issueToToggle) {
+        return
+      }
+
       try {
           const response = await fetch(`/api/edit_issue?id=${issueId}`, {
               method: "PATCH",
