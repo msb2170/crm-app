@@ -5,8 +5,8 @@ import type { NextAuthOptions } from "next-auth"
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID_DEV as string,
-      clientSecret: process.env.GITHUB_SECRET_DEV as string,
+      clientId: process.env.GITHUB_ID_PROD as string,
+      clientSecret: process.env.GITHUB_SECRET_PROD as string,
     }),
     
   ],
