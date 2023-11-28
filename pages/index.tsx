@@ -108,7 +108,7 @@ export default function Home() {
       <h1 className="text-3xl text-center text-slate-200 bold p-5">Mattlassian&apos;s Mira - My Ticket Management System</h1>
     </div>
     <Link href="/newIssue" className="absolute bottom-2 right-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium border border-white-500 rounded-lg text-sm px-5 py-2.5 mt-5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">New Issue</Link>
-    <div className="w-full overflow-x-auto">
+    <div className="w-full lg:w-auto overflow-x-auto">
       <table className=" rounded-lg bg-slate-300">
         <tbody>
           <tr>
