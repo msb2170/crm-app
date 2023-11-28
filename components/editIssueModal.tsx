@@ -2,7 +2,8 @@
 
 import Modal from "react-modal";
 import React, {ChangeEvent, useEffect, useState} from "react";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons'
 
 
 interface EditIssueModalProps {
@@ -79,37 +80,48 @@ export default function EditIssueModal({isOpen, handleClose, issueId, onEditSucc
         
     }
 
+    
+
     return (
         <div>
         <Modal isOpen={isOpen} onRequestClose={handleClose} ariaHideApp={false}>
-           <p>editing issue {issueId}</p>
+           <div className="flex justify-between items-center mb-4">
+            <button onClick={handleClose}><FontAwesomeIcon icon={faX} /></button>
+            <p className="flex justify-end">editing issue {issueId}</p>
+           </div>
            {editedIssue && (
            <form className="flex flex-col items-center" onSubmit={handleSubmit}>
-                <label>Name</label>
+                <label className="p-2">Name</label>
                 <input 
                 type="text" 
                 name="name" 
                 value={editedIssue.name}
-                placeholder=" Edit Name" 
-                onChange={handleChange}/>
-                <label>Location</label>
+                placeholder="What is your name?"
+                onChange={handleChange}
+                className="border border-slate-500 rounded p-1 text-center"
+                />
+                <label className="p-2">Location</label>
                 <input 
                 type="text" 
                 name="location" 
-                placeholder=" Edit Location" 
+                placeholder="Where are You?"
                 value={editedIssue.location}
-                onChange={handleChange}/>
-                <label>Nature of Issue</label>
+                onChange={handleChange}
+                className="border border-slate-500 rounded p-1 text-center"
+                />
+                <label className="p-2">Nature of Issue</label>
                 <input 
                 type="text" 
                 name="issue"
                 value={editedIssue.issue} 
-                placeholder=" Edit Issue" 
-                onChange={handleChange}/>
-                <button type="submit">Submit</button>
+                placeholder="What is the problem?"
+                onChange={handleChange}
+                className="border border-slate-500 rounded p-1 text-center"
+                />
+                <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium border border-white-500 rounded-lg text-sm px-10 py-2.5 mt-8 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
             </form>
             )}
-           <button onClick={handleClose}>Close Modal</button>
+           
         </Modal>
      </div>
 
